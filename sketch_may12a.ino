@@ -9,8 +9,8 @@ IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
 
 ESP8266WebServer server(80);
-const int trigP = 2;  //D4 Or GPIO-2 of nodemcu
-const int echoP = 0; 
+const int trigP = 2;  //D4
+const int echoP = 0; //D3
 long duration;
 int distance=0;
 String stringdistance=String(distance);
@@ -26,7 +26,7 @@ void setup() {
   
   server.begin();
   Serial.println("HTTP server started");
-  pinMode(trigP, OUTPUT);  // Sets the trigPin as an Output
+  pinMode(trigP, OUTPUT);  
   pinMode(echoP, INPUT);
 
 }
@@ -42,17 +42,17 @@ void handle_NotFound(){
   server.send(404, "text/plain", "Not found");
 }
 void measure_OnConnect(){
-  digitalWrite(trigP, LOW);   // Makes trigPin low
-  delayMicroseconds(2);       // 2 micro second delay 
+  digitalWrite(trigP, LOW);   
+  delayMicroseconds(2);       
 
-  digitalWrite(trigP, HIGH);  // tigPin high
-  delayMicroseconds(10);      // trigPin high for 10 micro seconds
-  digitalWrite(trigP, LOW);   // trigPin low
+  digitalWrite(trigP, HIGH);  
+  delayMicroseconds(10);      
+  digitalWrite(trigP, LOW);   
 
-  duration = pulseIn(echoP, HIGH);   //Read echo pin, time in microseconds
-  distance= duration*0.034/2;        //Calculating actual/real distance
+  duration = pulseIn(echoP, HIGH);   
+  distance= duration*0.034/2;        
 
-  Serial.print("Distance = ");        //Output distance on arduino serial monitor 
+  Serial.print("Distance = ");        
   Serial.println(distance);
   stringdistance=String(distance);
   server.send(200, "text/html", SendHTML(stringdistance));
